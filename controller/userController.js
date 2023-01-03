@@ -169,3 +169,48 @@ exports.logout = BigPromise((req, res) => {
   });
   res.json("logot Sucess");
 });
+//admin
+exports.adminAllUsers = BigPromise(async (req, res) => {
+  const allUsers = await User.find();
+  res.json(allUsers);
+});
+
+
+exports.singleUser = BigPromise(async (req, res) => {
+  const oneUser = await User.findById(req.params.id);
+  res.json(oneUser);
+});
+
+exports.updateUser = BigPromise(async (req, res) => {
+  const { name, email,role } = req.body;
+  const newData = {
+    name,
+    email,
+    role
+  };
+  const updatedUser = await User.findByIdAndUpdate(req.params.id,newData,{
+    new:true
+  });
+  res.json(updatedUser);
+});
+
+exports.deleteUser = BigPromise(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    if(!user){
+      res.json({error:"User Not Found"})
+    }
+    const imageId = user.photo?.id
+
+    if (imageId) {
+      //dlt photo
+      await cloudinary.v2.uploader.destroy(imageId);
+    }
+    await user.remove()
+
+  res.json('Deleted');
+});
+
+exports.managerAllUsers = BigPromise(async (req, res) => {
+  const allUsers = await User.find({role:'user'});
+  res.json(allUsers);
+});

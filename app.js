@@ -24,6 +24,10 @@ app.use(fileUpload({
 //import all routes
 app.use("/api/v1",require('./router/home'))
 app.use("/api/v1/user",require('./router/user'))
+app.use("/api/v1/product",require('./router/product'))
+app.use("/api/v1/payment",require("./router/payment"))
+app.use("/api/v1/order",require("./router/order"))
+
 
 console.log(process.env.Cloudinary_Api_Secret);
 cloudinary.config({

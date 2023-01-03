@@ -3,7 +3,7 @@ const User = require("../model/user")
 const BigPromise = require('./BigPromise')
 
 exports.isloggedIn =BigPromise(async(req,res,next)=>{
-    const token = req.cookies?.token||req.header('authorization').replace("Bearer ", "")
+    const token = req.cookies?.token||req.header('authorization')?.replace("Bearer ", "")
     if(!token)
         return res.status(401).json({error:"Login first"})
     
@@ -13,3 +13,13 @@ exports.isloggedIn =BigPromise(async(req,res,next)=>{
     next()
     
 })
+
+
+exports.CustomRole = (...roles)=>{
+    return (req,res,next)=>{
+        if(!roles.includes(req.user.role)){
+            return res.status(403).json({error:"You can't enter here"})
+        }
+        next()
+    }
+}
